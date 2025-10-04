@@ -14,7 +14,7 @@
         }
     },
     "depends": {
-      "fabric-api": "*"
+        "fabric-api": "*"
     },
     "recommends": {
         "modmenu" : "*"
@@ -22,10 +22,13 @@
     "name": "AntiGhost",
     "description": "Mod that helps you get rid of ghost blocks around yourself. Use /ghost or type the g key (can be rebound) to request block-resends.",
     "icon": "icon.png",
-    "authors": [ "Giselbaer" ],
+    "authors": [
+        "tfhmc",
+        "Giselbaer",
+        "IkyMax" ],
     "contact": {
-        "homepage": "https://www.curseforge.com/minecraft/mc-mods/antighost",
-        "sources": "https://github.com/gbl/AntiGhost",
-        "issues": "https://github.com/gbl/AntiGhost/issues"
+        "homepage": "https://modrinth.com/mod/antighost-2",
+        "sources": "https://github.com/tfhmc/AntiGhost-2",
+        "issues": "https://github.com/tfhmc/AntiGhost-2/issues"
     }
 }
