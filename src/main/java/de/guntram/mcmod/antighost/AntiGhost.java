@@ -1,6 +1,5 @@
 package de.guntram.mcmod.antighost;
 
-import net.minecraft.client.util.InputUtil;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
@@ -12,6 +11,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -24,7 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_G;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_I;
 
 public class AntiGhost implements ClientModInitializer {
     public static final String MOD_ID = "antighost";
@@ -36,9 +36,14 @@ public class AntiGhost implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         loadConfig();
-        final String category = "key.categories.antighost";
-        requestBlocksKey = new KeyBinding("key.antighost.reveal", InputUtil.Type.KEYSYM, GLFW_KEY_G, category);
-        KeyBindingHelper.registerKeyBinding(requestBlocksKey);
+
+        requestBlocksKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.antighost.reveal",
+                InputUtil.Type.KEYSYM,
+                GLFW_KEY_I,
+                KeyBinding.Category.MISC
+        ));
+
         ClientTickEvents.END_CLIENT_TICK.register(e -> keyPressed());
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             // /ghost [radius]
@@ -65,7 +70,9 @@ public class AntiGhost implements ClientModInitializer {
                                         radius = IntegerArgumentType.getInteger(c, "radius");
                                         saveConfig();
                                         ClientPlayerEntity player = MinecraftClient.getInstance().player;
-                                        player.sendMessage(Text.translatable("msg.radius_set", radius), false);
+                                        if (player != null) {
+                                            player.sendMessage(Text.translatable("msg.radius_set", radius), false);
+                                        }
                                         return 0;
                                     })
                             )
@@ -76,7 +83,7 @@ public class AntiGhost implements ClientModInitializer {
 
     public void keyPressed() {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        if (requestBlocksKey.wasPressed()) {
+        if (player != null && requestBlocksKey.wasPressed()) {
             this.requestBlocks(radius);
             player.sendMessage(Text.translatable("msg.request"), false);
         }
@@ -85,7 +92,7 @@ public class AntiGhost implements ClientModInitializer {
     public void requestBlocks(int radius) {
         MinecraftClient mc = MinecraftClient.getInstance();
         ClientPlayNetworkHandler conn = mc.getNetworkHandler();
-        if (conn == null) return;
+        if (conn == null || mc.player == null) return;
         BlockPos pos = mc.player.getBlockPos();
         for (int dx = -radius; dx <= radius; dx++) {
             for (int dy = -radius; dy <= radius; dy++) {
