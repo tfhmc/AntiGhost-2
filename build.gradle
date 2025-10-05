@@ -14,9 +14,9 @@ repositories {
 }
 
 ext.Versions = new Properties()
-Versions.load(file("Versionfiles/mcversion-1.21.5.properties").newReader())
+Versions.load(file("Versionfiles/mcversion-1.21.9.properties").newReader())
 
-ext.projectVersion = "1.0.0"
+ext.projectVersion = "4.0.0"
 
 version = "${Versions['minecraft_version']}-fabric${Versions['fabric_versiononly']}-${project.projectVersion}"
 
