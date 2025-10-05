@@ -1,5 +1,6 @@
 package de.guntram.mcmod.antighost;
 
+import net.minecraft.client.util.InputUtil;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
@@ -36,7 +37,7 @@ public class AntiGhost implements ClientModInitializer {
     public void onInitializeClient() {
         loadConfig();
         final String category = "key.categories.antighost";
-        requestBlocksKey = new KeyBinding("key.antighost.reveal", GLFW_KEY_G, category);
+        requestBlocksKey = new KeyBinding("key.antighost.reveal", InputUtil.Type.KEYSYM, GLFW_KEY_G, category);
         KeyBindingHelper.registerKeyBinding(requestBlocksKey);
         ClientTickEvents.END_CLIENT_TICK.register(e -> keyPressed());
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
